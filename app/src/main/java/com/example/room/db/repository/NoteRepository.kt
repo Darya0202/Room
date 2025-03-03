@@ -1,4 +1,4 @@
-package com.example.room.db.repository;
+package com.example.room.db.repository
 
 interface NoteRepository {
 }

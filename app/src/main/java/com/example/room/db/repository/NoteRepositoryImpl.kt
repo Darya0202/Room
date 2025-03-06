@@ -5,6 +5,7 @@ import com.example.room.db.dao.NoteDao
 import com.example.room.model.NoteModel
 
 class NoteRepositoryImpl(private val noteDao: NoteDao): NoteRepository {
+
     override val allNotes: LiveData<List<NoteModel>>
         get() = noteDao.getAllNotes()
 

@@ -2,24 +2,26 @@ package com.example.room.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.room.R
+import com.example.room.databinding.ItemLayoutBinding
 import com.example.room.model.NoteModel
 
 class NoteAdapter: RecyclerView.Adapter<NoteAdapter.NoteViewHolder> () {
 
-     var listNote = emptyList<NoteModel>()
+    var listNote = emptyList<NoteModel>()
 
-    class NoteViewHolder(view: View): RecyclerView.ViewHolder(view) {
-
+    class NoteViewHolder(private val viewBinding: ItemLayoutBinding): RecyclerView.ViewHolder(viewBinding.root) {
+        fun bind(note: NoteModel) {
+            viewBinding.itemTitle.text = note.title
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
-        return NoteViewHolder(view)
+        val viewBinding = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return NoteViewHolder(viewBinding)
     }
 
     override fun getItemCount(): Int {
@@ -27,9 +29,8 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.NoteViewHolder> () {
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        val note = listNote[position]
-        val titleView = holder.itemView.findViewById<TextView>(R.id.item_title)
-        titleView.text = note.title
+        val note: NoteModel = listNote[position]
+        holder.bind(note)
     }
 
     @SuppressLint("NotifyDataSetChanged")

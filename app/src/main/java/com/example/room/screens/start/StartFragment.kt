@@ -6,14 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.room.APP
+import com.example.room.MainActivity
 import com.example.room.R
 import com.example.room.adapter.NoteAdapter
 import com.example.room.databinding.FragmentStartBinding
+import com.example.room.model.NoteModel
 
 class StartFragment : Fragment() {
-    lateinit var binding: FragmentStartBinding
+    private var _binding: FragmentStartBinding? = null
+    private val binding get() = _binding!!
+
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: NoteAdapter
 
@@ -21,7 +26,7 @@ class StartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentStartBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentStartBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -31,18 +36,27 @@ class StartFragment : Fragment() {
     }
 
     private fun init() {
-        val viewModel = ViewModelProvider(this).get(StartViewModel::class.java)
+        val viewModel = ViewModelProvider(this)[StartViewModel::class.java]
         viewModel.initDataBase()
+
         recyclerView = binding.rvNotes
-        adapter = NoteAdapter()
+        adapter = NoteAdapter(this)
         recyclerView.adapter = adapter
-        viewModel.getAllNotes().observe(viewLifecycleOwner,{ListNotes ->
-            ListNotes.asReversed()
-            adapter.setList(ListNotes)
-        })
+
+        viewModel.getAllNotes().observe(viewLifecycleOwner) { ListNotes ->
+            adapter.setList(ListNotes.asReversed())
+        }
 
         binding.btnNext.setOnClickListener{
-            APP.navController.navigate(R.id.action_startFragment_to_addNoteFragment)
+            findNavController().navigate(R.id.action_startFragment_to_addNoteFragment)
+        }
+    }
+
+    companion object{
+        fun clickNote(fragment: Fragment, noteModel: NoteModel) {
+            val bundle = Bundle()
+            bundle.putSerializable("note", noteModel)
+            fragment.findNavController().navigate(R.id.action_startFragment_to_detailFragment, bundle)
         }
     }
 

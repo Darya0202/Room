@@ -15,4 +15,5 @@ class AddNoteViewModel: ViewModel() {
                 onSuccess()
             }
         }
+
 }

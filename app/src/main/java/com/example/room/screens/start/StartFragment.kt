@@ -31,17 +31,13 @@ class StartFragment : Fragment() {
 
         val viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
-        val daoNote = context?.let { NoteDatabase.getInstance(it).getNoteDao() }
-        REPOSITORY = daoNote?.let { NoteRepositoryImpl(it) }!!
-
-        val recyclerView = binding.rvNotes
         val adapter = NoteAdapter{ note ->
             val bundle = Bundle().apply {
                 putSerializable("note", note)
             }
             findNavController().navigate(R.id.action_startFragment_to_detailFragment, bundle)
         }
-        recyclerView.adapter = adapter
+        binding.rvNotes.adapter = adapter
 
         viewModel.getAllNotes().observe(viewLifecycleOwner) { ListNotes ->
             adapter.setList(ListNotes.asReversed())

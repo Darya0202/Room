@@ -1,5 +1,6 @@
 package com.example.room.screens.detail
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.room.R
 import com.example.room.databinding.FragmentDetailBinding
 import com.example.room.model.NoteModel
+import com.example.room.utils.serializable
+import java.io.Serializable
 
 class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
@@ -28,7 +31,8 @@ class DetailFragment : Fragment() {
 
         val viewModel = ViewModelProvider(this)[DetailViewModel::class.java]
 
-        @Suppress("DEPRECATION") val currentNote: NoteModel = arguments?.getSerializable("note") as NoteModel
+        val currentNote: NoteModel = arguments?.serializable("note")
+            ?: throw IllegalArgumentException("Note is missing")
 
         binding.tvTitleDetail.text = currentNote.title
         binding.tvDescDetail.text = currentNote.description

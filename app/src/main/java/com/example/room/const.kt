@@ -1,3 +1,5 @@
 package com.example.room
 
-lateinit var APP: MainActivity
+import com.example.room.db.repository.NoteRepository
+
+lateinit var REPOSITORY: NoteRepository
